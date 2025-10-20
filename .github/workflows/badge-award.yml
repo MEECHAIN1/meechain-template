@@ -1,0 +1,77 @@
+name: Award Badge on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  award-badge:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Determine badge type
+        id: badge
+        run: |
+          # Check if this is first contribution
+          AUTHOR="${{ github.event.pull_request.user.login }}"
+          PR_COUNT=$(gh pr list --author $AUTHOR --state merged --json number --jq 'length')
+          
+          if [ "$PR_COUNT" -eq "1" ]; then
+            echo "badge_type=first-contribution" >> $GITHUB_OUTPUT
+            echo "badge_name=First Contribution" >> $GITHUB_OUTPUT
+          else
+            # Check what was changed
+            if git diff --name-only HEAD~1 | grep -q "external-modules/"; then
+              echo "badge_type=module-creator" >> $GITHUB_OUTPUT
+              echo "badge_name=Module Creator" >> $GITHUB_OUTPUT
+            elif git diff --name-only HEAD~1 | grep -q "academy/"; then
+              echo "badge_type=educator" >> $GITHUB_OUTPUT
+              echo "badge_name=Educator" >> $GITHUB_OUTPUT
+            else
+              echo "badge_type=contributor" >> $GITHUB_OUTPUT
+              echo "badge_name=Contributor" >> $GITHUB_OUTPUT
+            fi
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const badgeName = '${{ steps.badge.outputs.badge_name }}';
+            const author = context.payload.pull_request.user.login;
+            
+            const comment = `
+            🎉 **Congratulations @${author}!**
+            
+            Your contribution has been merged! 🚀
+            
+            **You've earned:**
+            - 🏅 **${badgeName}** badge
+            - 💰 MEE tokens (will be distributed soon)
+            - ⭐ Recognition in our Contributors list
+            
+            Thank you for making MeeChain better! Keep contributing! 💪
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Add contributor to list
+        run: |
+          echo "TODO: Add contributor to CONTRIBUTORS.md"
+          # This would typically call a script or API to update the contributors list
