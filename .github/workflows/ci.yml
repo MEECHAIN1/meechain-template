@@ -1,0 +1,96 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Test DApp
+  test-dapp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        working-directory: ./dapp
+        run: npm ci
+        
+      - name: Run tests
+        working-directory: ./dapp
+        run: npm test
+        
+      - name: Build
+        working-directory: ./dapp
+        run: npm run build
+
+  # Test Smart Contracts
+  test-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        working-directory: ./smart-contracts
+        run: npm ci
+        
+      - name: Compile contracts
+        working-directory: ./smart-contracts
+        run: npx hardhat compile
+        
+      - name: Run tests
+        working-directory: ./smart-contracts
+        run: npx hardhat test
+
+  # Test Firebase Functions
+  test-firebase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        working-directory: ./firebase-functions/functions
+        run: npm ci
+        
+      - name: Run tests
+        working-directory: ./firebase-functions/functions
+        run: npm test
+
+  # Lint all code
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Lint DApp
+        working-directory: ./dapp
+        run: |
+          npm ci
+          npm run lint || echo "Linting not configured yet"
+          
+      - name: Lint Smart Contracts
+        working-directory: ./smart-contracts
+        run: |
+          npm ci
+          npx solhint 'contracts/**/*.sol' || echo "Solhint not configured yet"

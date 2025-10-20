@@ -1,0 +1,73 @@
+// Firestore security rules for MeeChain
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+      
+      // User badges subcollection
+      match /badges/{badgeId} {
+        allow read: if isAuthenticated();
+        allow write: if false; // Only through cloud functions
+      }
+      
+      // Completed quests subcollection
+      match /completedQuests/{questId} {
+        allow read: if isAuthenticated();
+        allow write: if false; // Only through cloud functions
+      }
+      
+      // User stats
+      match /stats/{statId} {
+        allow read: if isAuthenticated();
+        allow write: if false; // Only through cloud functions
+      }
+    }
+    
+    // Quests collection
+    match /quests/{questId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Badges collection
+    match /badges/{badgeId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Logs collection
+    match /logs/{logId} {
+      allow read: if isAdmin();
+      allow write: if false; // Only through cloud functions
+    }
+    
+    // MeeBot logs
+    match /meebotLogs/{logId} {
+      allow read: if isAdmin();
+      allow write: if false; // Only through cloud functions
+    }
+    
+    // External modules registry
+    match /externalModules/{moduleId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+  }
+}
