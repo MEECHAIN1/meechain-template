@@ -1,0 +1,27 @@
+{
+  "name": "meechain-template",
+  "version": "1.0.0",
+  "description": "Template for MeeChain DApp with MeeBot, Firebase, Smart Contracts and External Modules",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean"
+  },
+  "keywords": [
+    "meechain",
+    "dapp",
+    "blockchain",
+    "firebase",
+    "smart-contracts"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "ethers": "^6.0.0"
+  }
+}
