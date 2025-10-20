@@ -59,8 +59,8 @@ class ModuleLoader {
     }
 
     try {
-      // Load module from filesystem
-      const modulePath = path.join(this.modulesPath, moduleInfo.path, moduleInfo.entry);
+      // Load module from filesystem (using absolute path)
+      const modulePath = path.resolve(this.modulesPath, moduleInfo.path, moduleInfo.entry);
       const ModuleClass = require(modulePath);
       
       // Create instance
