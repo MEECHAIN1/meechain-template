@@ -1,0 +1,162 @@
+{
+  "id": "badge-hunter",
+  "title": "Badge Hunter",
+  "description": "เก็บ badges หลากหลายประเภท",
+  "category": "intermediate",
+  "difficulty": "medium",
+  "estimatedTime": 120,
+  "rewards": {
+    "badge": "badge-hunter",
+    "meeTokens": 200,
+    "experience": 500
+  },
+  "prerequisites": ["first-board"],
+  "objectives": [
+    "เข้าใจระบบ Badge ของ MeeChain",
+    "ได้รับ badges จากหลายกิจกรรม",
+    "สะสม NFT badges",
+    "เป็น active contributor"
+  ],
+  "badges": [
+    {
+      "id": "first-board",
+      "name": "First Board",
+      "description": "สร้าง board แรก",
+      "type": "achievement",
+      "required": true
+    },
+    {
+      "id": "task-master",
+      "name": "Task Master",
+      "description": "ทำงานสำเร็จ 10 tasks",
+      "type": "progress",
+      "required": true,
+      "target": 10
+    },
+    {
+      "id": "streak-7",
+      "name": "Week Warrior",
+      "description": "ใช้งานต่อเนื่อง 7 วัน",
+      "type": "streak",
+      "required": true,
+      "target": 7
+    },
+    {
+      "id": "contributor",
+      "name": "Contributor",
+      "description": "Contribute module หรือ PR",
+      "type": "contribution",
+      "required": false
+    },
+    {
+      "id": "social-butterfly",
+      "name": "Social Butterfly",
+      "description": "แชร์ความสำเร็จบน social media",
+      "type": "social",
+      "required": false
+    }
+  ],
+  "steps": [
+    {
+      "id": "step-1",
+      "title": "เก็บ First Board Badge",
+      "description": "ทำ quest 'first-board' ให้เสร็จ",
+      "validation": {
+        "type": "badge-earned",
+        "badgeId": "first-board"
+      }
+    },
+    {
+      "id": "step-2",
+      "title": "ทำงานให้ครบ 10 tasks",
+      "description": "ทำงานสำเร็จอย่างน้อย 10 tasks",
+      "instructions": [
+        "สร้าง boards ใหม่หรือใช้ templates",
+        "เพิ่ม tasks ใน boards",
+        "ทำให้เสร็จ",
+        "ดูความก้าวหน้าใน Profile"
+      ],
+      "validation": {
+        "type": "task-count",
+        "minCount": 10
+      }
+    },
+    {
+      "id": "step-3",
+      "title": "สร้าง Streak 7 วัน",
+      "description": "ใช้งาน MeeChain ต่อเนื่อง 7 วัน",
+      "instructions": [
+        "กลับมาใช้งานทุกวัน",
+        "ทำงานอย่างน้อย 1 task ต่อวัน",
+        "ดู streak counter เพิ่มขึ้น",
+        "รับ badge เมื่อครบ 7 วัน"
+      ],
+      "validation": {
+        "type": "streak-count",
+        "minStreak": 7
+      }
+    },
+    {
+      "id": "step-4",
+      "title": "Mint Badges เป็น NFT",
+      "description": "Mint badges ที่ได้เป็น NFT บน blockchain",
+      "instructions": [
+        "ไปที่หน้า Badges",
+        "เลือก badge ที่ต้องการ mint",
+        "คลิก 'Mint as NFT'",
+        "Confirm transaction ใน wallet",
+        "รอ transaction สำเร็จ"
+      ],
+      "validation": {
+        "type": "nft-minted",
+        "minCount": 3
+      }
+    },
+    {
+      "id": "step-5",
+      "title": "Optional: Contribute",
+      "description": "Contribute module หรือส่ง PR (optional)",
+      "instructions": [
+        "Fork repository",
+        "สร้าง external module ใหม่",
+        "ส่ง Pull Request",
+        "รอ review และ merge"
+      ],
+      "validation": {
+        "type": "pr-merged",
+        "optional": true
+      }
+    }
+  ],
+  "milestones": [
+    {
+      "at": 3,
+      "message": "ได้ 3 badges แล้ว! เก่งมาก! 🌟",
+      "reward": {
+        "meeTokens": 50
+      }
+    },
+    {
+      "at": 5,
+      "message": "ครบ 5 badges! คุณเป็น Badge Hunter จริงๆ! 🏆",
+      "reward": {
+        "meeTokens": 100
+      }
+    }
+  ],
+  "completion": {
+    "message": "สุดยอด! คุณได้รับ badge 'Badge Hunter' 🏅 และสะสม badges ได้เยอะมาก!",
+    "nextQuest": "contributor-pro",
+    "tips": [
+      "ลอง mint badges เป็น NFT",
+      "แชร์ collection ของคุณ",
+      "มองหา rare badges",
+      "Contribute เพื่อรับ special badges"
+    ],
+    "specialReward": {
+      "type": "nft",
+      "name": "Badge Hunter NFT",
+      "description": "Special NFT สำหรับ Badge Hunters"
+    }
+  }
+}
