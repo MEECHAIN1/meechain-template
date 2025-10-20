@@ -6,6 +6,11 @@ on:
   issues:
     types: [closed]
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   award-badges:
     if: github.event.pull_request.merged == true
