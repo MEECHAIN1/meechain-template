@@ -1,0 +1,113 @@
+name: Badge Award System
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  award-badge:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Determine badge type
+        id: badge
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_LABELS="${{ join(github.event.pull_request.labels.*.name, ',') }}"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          AUTHOR="${{ github.event.pull_request.user.login }}"
+          
+          # Determine badge based on PR characteristics
+          BADGE_TYPE="contributor"
+          
+          if [[ "$PR_LABELS" == *"bug"* ]]; then
+            BADGE_TYPE="bug-hunter"
+          elif [[ "$PR_LABELS" == *"module"* ]]; then
+            BADGE_TYPE="module-builder"
+          elif [[ "$PR_LABELS" == *"documentation"* ]]; then
+            BADGE_TYPE="documentation-hero"
+          elif [[ "$PR_TITLE" == *"feat:"* ]] || [[ "$PR_TITLE" == *"feature"* ]]; then
+            BADGE_TYPE="feature-creator"
+          fi
+          
+          echo "badge_type=$BADGE_TYPE" >> $GITHUB_OUTPUT
+          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+
+      - name: Check if first contribution
+        id: first_contribution
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const author = '${{ steps.badge.outputs.author }}';
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed',
+              per_page: 100
+            });
+            
+            const authorPRs = prs.filter(pr => pr.user.login === author && pr.merged_at);
+            const isFirst = authorPRs.length === 1;
+            
+            core.setOutput('is_first', isFirst);
+            return isFirst;
+
+      - name: Comment on PR with badge
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const badgeType = '${{ steps.badge.outputs.badge_type }}';
+            const isFirst = '${{ steps.first_contribution.outputs.is_first }}' === 'true';
+            
+            const badges = {
+              'bug-hunter': '🐛 **Bug Hunter**',
+              'feature-creator': '✨ **Feature Creator**',
+              'documentation-hero': '📚 **Documentation Hero**',
+              'module-builder': '🧩 **Module Builder**',
+              'contributor': '🌟 **Contributor**'
+            };
+            
+            let message = `## 🎉 ขอแสดงความยินดี!\n\n`;
+            
+            if (isFirst) {
+              message += `🌟 **First Contribution Badge** - นี่คือ PR แรกของคุณ!\n\n`;
+            }
+            
+            message += `คุณได้รับ badge: ${badges[badgeType]}\n\n`;
+            message += `ขอบคุณสำหรับการมีส่วนร่วมใน MeeChain Template! 🚀\n\n`;
+            message += `Badge จะถูกบันทึกและแสดงในโปรไฟล์ของคุณในระบบ MeeChain`;
+            
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ steps.badge.outputs.pr_number }},
+              body: message
+            });
+
+      - name: Log badge award
+        run: |
+          echo "Badge awarded: ${{ steps.badge.outputs.badge_type }}"
+          echo "Recipient: ${{ steps.badge.outputs.author }}"
+          echo "PR: #${{ steps.badge.outputs.pr_number }}"
+          echo "First contribution: ${{ steps.first_contribution.outputs.is_first }}"
+          
+          # In a real implementation, this would call Firebase Functions
+          # to record the badge in the database
+          # Example:
+          # curl -X POST https://your-firebase-function.com/awardBadge \
+          #   -H "Content-Type: application/json" \
+          #   -d '{
+          #     "user": "${{ steps.badge.outputs.author }}",
+          #     "badge": "${{ steps.badge.outputs.badge_type }}",
+          #     "pr": "${{ steps.badge.outputs.pr_number }}"
+          #   }'
