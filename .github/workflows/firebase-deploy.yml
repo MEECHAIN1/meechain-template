@@ -8,6 +8,10 @@ on:
       - 'firebase-functions/**'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
