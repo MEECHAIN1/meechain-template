@@ -6,7 +6,10 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
-    "prebuild": "npm run clean"
+    "prebuild": "npm run clean",
+    "test": "npm run test:formatProgress && npm run test:awardBadge",
+    "test:formatProgress": "npx ts-node tests/test-formatProgress.ts",
+    "test:awardBadge": "npx ts-node tests/test-awardBadge.ts"
   },
   "keywords": [
     "meechain",
