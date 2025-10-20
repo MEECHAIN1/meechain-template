@@ -1,0 +1,136 @@
+name: Badge & Quest System
+
+on:
+  pull_request:
+    types: [closed]
+  issues:
+    types: [closed]
+
+jobs:
+  award-badges:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Check PR type
+        id: pr_type
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_LABELS="${{ join(github.event.pull_request.labels.*.name, ',') }}"
+          
+          # Determine badge type based on PR
+          if [[ "$PR_LABELS" == *"bug"* ]]; then
+            echo "badge=bug-hunter" >> $GITHUB_OUTPUT
+            echo "points=15" >> $GITHUB_OUTPUT
+          elif [[ "$PR_LABELS" == *"feature"* ]]; then
+            echo "badge=feature-creator" >> $GITHUB_OUTPUT
+            echo "points=25" >> $GITHUB_OUTPUT
+          elif [[ "$PR_LABELS" == *"documentation"* ]]; then
+            echo "badge=documentarian" >> $GITHUB_OUTPUT
+            echo "points=10" >> $GITHUB_OUTPUT
+          elif [[ "$PR_LABELS" == *"external-module"* ]]; then
+            echo "badge=module-maker" >> $GITHUB_OUTPUT
+            echo "points=30" >> $GITHUB_OUTPUT
+          elif [[ "$PR_LABELS" == *"test"* ]]; then
+            echo "badge=test-champion" >> $GITHUB_OUTPUT
+            echo "points=20" >> $GITHUB_OUTPUT
+          elif [[ "$PR_LABELS" == *"academy"* ]]; then
+            echo "badge=academy-author" >> $GITHUB_OUTPUT
+            echo "points=35" >> $GITHUB_OUTPUT
+          else
+            echo "badge=contributor" >> $GITHUB_OUTPUT
+            echo "points=10" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if first contribution
+        id: first_contrib
+        run: |
+          AUTHOR="${{ github.event.pull_request.user.login }}"
+          CONTRIB_COUNT=$(gh api "/repos/${{ github.repository }}/pulls?state=closed&creator=$AUTHOR" --jq 'length')
+          
+          if [ "$CONTRIB_COUNT" -eq 1 ]; then
+            echo "is_first=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_first=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment with MeeBot welcome
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const badge = '${{ steps.pr_type.outputs.badge }}';
+            const points = '${{ steps.pr_type.outputs.points }}';
+            const isFirst = '${{ steps.first_contrib.outputs.is_first }}' === 'true';
+            const author = context.payload.pull_request.user.login;
+            
+            const badgeEmojis = {
+              'bug-hunter': '🐛',
+              'feature-creator': '✨',
+              'documentarian': '📚',
+              'module-maker': '🧠',
+              'test-champion': '🧪',
+              'academy-author': '🎓',
+              'contributor': '🌟'
+            };
+            
+            const badgeNames = {
+              'bug-hunter': 'Bug Hunter',
+              'feature-creator': 'Feature Creator',
+              'documentarian': 'Documentarian',
+              'module-maker': 'ผู้สร้างสมองเสริม',
+              'test-champion': 'Test Champion',
+              'academy-author': 'Academy Author',
+              'contributor': 'First Contribution'
+            };
+            
+            let message = `## 🎉 ขอบคุณ @${author}!\n\n`;
+            
+            if (isFirst) {
+              message += `ยินดีต้อนรับสู่ชุมชน MeeChain! 🌟 นี่คือการ contribute ครั้งแรกของคุณ\n\n`;
+              message += `คุณได้รับ badge **"First Contribution"** (+10 points) 🎊\n\n`;
+            }
+            
+            message += `ขอบคุณที่สร้างโมดูล/คุณสมบัติใหม่ให้เพื่อน ๆ ใช้นะครับ!\n\n`;
+            message += `### 🏅 Badge ที่ได้รับ\n\n`;
+            message += `${badgeEmojis[badge]} **${badgeNames[badge]}** (+${points} points)\n\n`;
+            
+            if (badge === 'module-maker') {
+              message += `ตอนนี้โมดูลของคุณพร้อมให้โหลดผ่าน external-modules แล้วครับ!\n\n`;
+            }
+            
+            message += `### 📊 สถิติของคุณ\n\n`;
+            message += `- Total Contributions: [View Stats](https://github.com/${{ github.repository }}/graphs/contributors)\n`;
+            message += `- Your Profile: [@${author}](https://github.com/${author})\n\n`;
+            message += `---\n\n`;
+            message += `💙 ขอบคุณที่ช่วยทำให้ MeeChain ดีขึ้น!\n\n`;
+            message += `*หากคุณสนใจ quest อื่นๆ ดูได้ที่ [Quest Issues](https://github.com/${{ github.repository }}/labels/quest)*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
+
+      - name: Update contributor stats (placeholder)
+        run: |
+          echo "📊 Badge awarded: ${{ steps.pr_type.outputs.badge }}"
+          echo "🎯 Points: ${{ steps.pr_type.outputs.points }}"
+          echo "👤 Contributor: ${{ github.event.pull_request.user.login }}"
+          echo ""
+          echo "Note: Integrate with Firebase to persist badges and points"
+          # TODO: Call Firebase Function to update contributor stats
+          # curl -X POST https://your-firebase-function.cloudfunctions.net/updateContributor \
+          #   -H "Content-Type: application/json" \
+          #   -d '{"user":"${{ github.event.pull_request.user.login }}","badge":"${{ steps.pr_type.outputs.badge }}","points":${{ steps.pr_type.outputs.points }}}'

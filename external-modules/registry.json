@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-10-20T00:00:00.000Z",
+  "modules": [
+    {
+      "id": "greeting",
+      "name": "Greeting Module",
+      "version": "1.0.0",
+      "author": "MeeChain Team",
+      "description": "โมดูลสำหรับทักทายผู้ใช้ด้วยรูปแบบต่างๆ",
+      "path": "modules/greeting",
+      "entry": "index.js",
+      "tags": ["greeting", "social", "meebot"],
+      "verified": true,
+      "downloads": 0,
+      "rating": 5.0,
+      "meebot": {
+        "enabled": true,
+        "trigger": ["hello", "hi", "สวัสดี"],
+        "description": "ทักทายผู้ใช้"
+      }
+    },
+    {
+      "id": "calculator",
+      "name": "Calculator Module",
+      "version": "1.0.0",
+      "author": "MeeChain Team",
+      "description": "โมดูลสำหรับคำนวณทางคณิตศาสตร์",
+      "path": "modules/calculator",
+      "entry": "index.js",
+      "tags": ["math", "calculator", "utility"],
+      "verified": true,
+      "downloads": 0,
+      "rating": 5.0,
+      "meebot": {
+        "enabled": true,
+        "trigger": ["calc", "calculate", "คำนวณ"],
+        "description": "คำนวณนิพจน์ทางคณิตศาสตร์"
+      }
+    }
+  ]
+}
