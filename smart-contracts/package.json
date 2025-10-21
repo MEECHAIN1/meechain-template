@@ -1,0 +1,23 @@
+{
+  "name": "meechain-smart-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for MeeChain T2P platform",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat run scripts/deploy.ts",
+    "verify": "hardhat run scripts/verify.ts"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
+    "@typechain/hardhat": "^9.0.0",
+    "hardhat": "^2.19.0",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0",
+    "dotenv": "^16.0.0"
+  }
+}

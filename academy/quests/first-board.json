@@ -1,0 +1,107 @@
+{
+  "id": "first-board",
+  "title": "สร้าง Board แรกของคุณ",
+  "description": "เรียนรู้วิธีการใช้ MeeChain ผ่านการสร้าง board แรก",
+  "category": "beginner",
+  "difficulty": "easy",
+  "estimatedTime": 30,
+  "rewards": {
+    "badge": "first-board",
+    "meeTokens": 50,
+    "experience": 100
+  },
+  "prerequisites": [],
+  "objectives": [
+    "เข้าใจระบบ Board ของ MeeChain",
+    "สร้าง Board แรกได้สำเร็จ",
+    "เพิ่ม Tasks และทำให้เสร็จ",
+    "ได้รับ badge แรก"
+  ],
+  "steps": [
+    {
+      "id": "step-1",
+      "title": "เชื่อม Wallet",
+      "description": "เชื่อม MetaMask wallet กับ MeeChain DApp",
+      "instructions": [
+        "คลิกปุ่ม 'Connect Wallet' บนหน้าแรก",
+        "เลือก MetaMask",
+        "Approve การเชื่อมต่อ",
+        "ตรวจสอบว่า address แสดงบนหน้าจอ"
+      ],
+      "validation": {
+        "type": "wallet-connected",
+        "message": "Wallet เชื่อมต่อสำเร็จ! 🎉"
+      }
+    },
+    {
+      "id": "step-2",
+      "title": "สร้าง Board ใหม่",
+      "description": "สร้าง board แรกของคุณ",
+      "instructions": [
+        "ไปที่หน้า Dashboard",
+        "คลิก 'Create New Board'",
+        "ตั้งชื่อ Board (เช่น 'My First Board')",
+        "เพิ่มคำอธิบาย",
+        "คลิก 'Create'"
+      ],
+      "validation": {
+        "type": "board-created",
+        "message": "Board สร้างสำเร็จ! 🎯"
+      }
+    },
+    {
+      "id": "step-3",
+      "title": "เพิ่ม Tasks",
+      "description": "เพิ่มอย่างน้อย 3 tasks ใน board",
+      "instructions": [
+        "เปิด board ที่สร้าง",
+        "คลิก 'Add Task'",
+        "กรอกชื่องาน",
+        "เพิ่มคำอธิบาย (optional)",
+        "ทำซ้ำอีก 2 tasks"
+      ],
+      "validation": {
+        "type": "tasks-added",
+        "minTasks": 3,
+        "message": "Tasks เพิ่มครบแล้ว! ✨"
+      }
+    },
+    {
+      "id": "step-4",
+      "title": "ทำ Task ให้เสร็จ",
+      "description": "ทำ task แรกให้สำเร็จ",
+      "instructions": [
+        "คลิก checkbox หน้า task",
+        "ดู MeeBot ให้กำลังใจ",
+        "สังเกต progress bar เปลี่ยน"
+      ],
+      "validation": {
+        "type": "task-completed",
+        "message": "ทำสำเร็จแล้ว! MeeBot ภูมิใจในตัวคุณ! 💪"
+      }
+    },
+    {
+      "id": "step-5",
+      "title": "ลองใช้ MeeBot",
+      "description": "โต้ตอบกับ MeeBot",
+      "instructions": [
+        "คลิกปุ่ม 'คุยกับ MeeBot'",
+        "ฟังข้อความให้กำลังใจ",
+        "ลอง voice trigger (optional)"
+      ],
+      "validation": {
+        "type": "meebot-interaction",
+        "message": "MeeBot ยินดีที่ได้รู้จักคุณ! 🤖"
+      }
+    }
+  ],
+  "completion": {
+    "message": "ยินดีด้วย! คุณได้รับ badge 'First Board' 🏅",
+    "nextQuest": "badge-hunter",
+    "tips": [
+      "ลองสร้าง board ใหม่จาก templates",
+      "เชิญเพื่อนมาร่วม MeeChain",
+      "เรียนรู้เพิ่มเติมใน Academy"
+    ]
+  }
+}
