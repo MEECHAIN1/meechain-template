@@ -1,0 +1,14 @@
+{
+  "name": "calculator",
+  "version": "1.0.0",
+  "description": "โมดูลสำหรับคำนวณทางคณิตศาสตร์",
+  "author": "MeeChain Team",
+  "license": "MIT",
+  "entry": "index.js",
+  "dependencies": [],
+  "tags": ["math", "calculator", "utility"],
+  "meebot": {
+    "trigger": ["calc", "calculate", "คำนวณ"],
+    "description": "คำนวณนิพจน์ทางคณิตศาสตร์"
+  }
+}

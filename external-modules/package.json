@@ -1,0 +1,21 @@
+{
+  "name": "meechain-external-modules",
+  "version": "1.0.0",
+  "description": "External modules system for MeeChain",
+  "main": "loader/loader.js",
+  "scripts": {
+    "test": "node modules/greeting/test.js && node modules/calculator/test.js",
+    "test:greeting": "node modules/greeting/test.js",
+    "test:calculator": "node modules/calculator/test.js"
+  },
+  "keywords": [
+    "meechain",
+    "modules",
+    "plugins",
+    "dynamic-loading"
+  ],
+  "author": "MeeChain Team",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}
