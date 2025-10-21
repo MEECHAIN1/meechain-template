@@ -1,0 +1,14 @@
+{
+  "name": "greeting",
+  "version": "1.0.0",
+  "description": "โมดูลสำหรับทักทายผู้ใช้ด้วยรูปแบบต่างๆ",
+  "author": "MeeChain Team",
+  "license": "MIT",
+  "entry": "index.js",
+  "dependencies": [],
+  "tags": ["greeting", "social", "meebot"],
+  "meebot": {
+    "trigger": ["hello", "hi", "สวัสดี", "ทักทาย"],
+    "description": "ทักทายผู้ใช้ด้วยความเป็นมิตร"
+  }
+}
