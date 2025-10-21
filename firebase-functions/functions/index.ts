@@ -1,3 +1,9 @@
+/**
+ * Firebase Functions Module
+ * Export all Firebase Cloud Functions
+ */
+
+export * from './awardBadge';
 import * as admin from 'firebase-admin';
 import { awardBadge, onBoardCompleted } from './awardBadge';
 import { logProgress } from './logProgress';
