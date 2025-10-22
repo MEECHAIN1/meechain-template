@@ -1,0 +1,50 @@
+node_modules
+dist
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.ne
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+xt/
+
+# production
+/build
+/out/
+
+# misc
+.DS_Store
+*.pem
+
+# Unity burst runtime (large binaries)
+*.dll
+*.dylib
+*.so
+*.exe
+*.bin
+.dsymutil
+docker-scout
