@@ -1,5 +1,43 @@
 # Dependencies
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+
+# TypeScript
+*.tsbuildinfo
+*.tsbuildinfo.*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# IDE
+*.js
+*.d.ts
+!*.config.js
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
 .pnp
 .pnp.js
 
@@ -7,6 +45,7 @@ node_modules/
 coverage/
 *.lcov
 .nyc_output
+*.log
 
 # Next.js
 .next/
@@ -16,6 +55,13 @@ dist/
 
 # Production
 *.log
+*.tsbuildinfo
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -30,10 +76,88 @@ yarn-error.log*
 # IDEs
 .idea/
 .vscode/
+# Local env files
+.env
+.env*.local
+bower_components/
+jspm_packages/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDEs
+.vscode/
+.idea/
 *.swp
 *.swo
 *~
 .DS_Store
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# OS
+.DS_Store
+Thumbs.db
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
 
 # Hardhat
 cache/
@@ -45,6 +169,18 @@ typechain-types/
 .firebase/
 firebase-debug.log
 firestore-debug.log
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
 
 # Temporary files
 tmp/
@@ -53,3 +189,66 @@ temp/
 
 # Build artifacts
 *.tsbuildinfo
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Compiled contracts
+*.abi
+*.bin
+
+# Secrets
+*.pem
+*.key
+secrets.json
+service-account.json
+
+# Local blockchain
+chain-data/
+
+# Vercel
+.vercel
+
+# Turbo
+.turbo
+# Misc
+.temp/
+.tmp/
+*.bak
+*.tmp
+
+# Hardhat
+cache/
+artifacts/
+typechain/
+typechain-types/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+# Secrets
+*.pem
+*.key
+secrets/
+credentials/
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.pnp.*
