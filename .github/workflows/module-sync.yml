@@ -5,6 +5,9 @@ on:
     types: [opened, synchronize]
     paths:
       - 'external-modules/**'
+name: Sync External Modules
+
+on:
   push:
     branches:
       - main
@@ -21,6 +24,14 @@ jobs:
     
     steps:
       - name: Checkout repository
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -206,3 +217,72 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.find-modules.outputs.modules }}" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
+      - name: Validate modules
+        run: |
+          echo "Validating external modules..."
+          
+          # Check TypeScript files
+          if ls external-modules/*/*.ts 1> /dev/null 2>&1; then
+            echo "✅ TypeScript files found"
+          else
+            echo "⚠️ No TypeScript files in external-modules"
+          fi
+          
+          # Count modules
+          MODULE_COUNT=$(find external-modules -name "*.ts" -type f | wc -l)
+          echo "📦 Total modules: $MODULE_COUNT"
+
+      - name: Generate module index
+        run: |
+          echo "# External Modules Index" > external-modules/INDEX.md
+          echo "" >> external-modules/INDEX.md
+          echo "Auto-generated list of available modules:" >> external-modules/INDEX.md
+          echo "" >> external-modules/INDEX.md
+          
+          # List smart-contracts modules
+          echo "## Smart Contracts" >> external-modules/INDEX.md
+          for file in external-modules/smart-contracts/*.ts; do
+            if [ -f "$file" ]; then
+              basename=$(basename "$file" .ts)
+              echo "- [$basename](./smart-contracts/$basename.ts)" >> external-modules/INDEX.md
+            fi
+          done
+          
+          # List shared-utils modules
+          echo "" >> external-modules/INDEX.md
+          echo "## Shared Utilities" >> external-modules/INDEX.md
+          for file in external-modules/shared-utils/*.ts; do
+            if [ -f "$file" ]; then
+              basename=$(basename "$file" .ts)
+              echo "- [$basename](./shared-utils/$basename.ts)" >> external-modules/INDEX.md
+            fi
+          done
+          
+          # List app-config modules
+          echo "" >> external-modules/INDEX.md
+          echo "## App Configuration" >> external-modules/INDEX.md
+          for file in external-modules/app-config/*.ts; do
+            if [ -f "$file" ]; then
+              basename=$(basename "$file" .ts)
+              echo "- [$basename](./app-config/$basename.ts)" >> external-modules/INDEX.md
+            fi
+          done
+
+      - name: Commit module index
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          if git diff --quiet external-modules/INDEX.md; then
+            echo "No changes to commit"
+          else
+            git add external-modules/INDEX.md
+            git commit -m "Auto-update: External modules index"
+            git push
+          fi
+
+      - name: Notify sync
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('✅ External modules synced successfully');

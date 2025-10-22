@@ -1,4 +1,5 @@
 name: Firebase Deploy
+name: Deploy Firebase Functions
 
 on:
   push:
@@ -18,6 +19,7 @@ jobs:
     
     steps:
       - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -86,3 +88,33 @@ jobs:
           echo "- ✅ Deployment completed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        working-directory: ./firebase-functions
+        run: npm install
+
+      - name: Build functions
+        working-directory: ./firebase-functions
+        run: npm run build
+
+      - name: Deploy to Firebase
+        working-directory: ./firebase-functions
+        run: firebase deploy --only functions --token ${{ secrets.FIREBASE_TOKEN }}
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+      - name: Notify deployment
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const message = `
+            ✅ **Firebase Functions Deployed Successfully**
+            
+            **Commit:** ${context.sha.substring(0, 7)}
+            **Author:** @${context.actor}
+            **Time:** ${new Date().toISOString()}
+            
+            All cloud functions are now live! 🚀
+            `;
+            
+            // You could post this to Discord, Slack, etc.
+            console.log(message);
