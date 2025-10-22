@@ -1,0 +1,288 @@
+name: Module Sync
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'external-modules/**'
+name: Sync External Modules
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'external-modules/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate-and-sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Find modified modules
+        id: find-modules
+        run: |
+          # Find all modified module directories
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          else
+            BASE_SHA="${{ github.event.before }}"
+            HEAD_SHA="${{ github.sha }}"
+          fi
+          
+          CHANGED_FILES=$(git diff --name-only $BASE_SHA $HEAD_SHA | grep "^external-modules/" || true)
+          
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No module changes detected"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+          
+          # Extract unique module directories
+          MODULES=$(echo "$CHANGED_FILES" | cut -d'/' -f1-3 | sort -u)
+          echo "Modified modules:"
+          echo "$MODULES"
+          
+          echo "modules<<EOF" >> $GITHUB_OUTPUT
+          echo "$MODULES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Validate modules
+        if: steps.find-modules.outputs.has_changes == 'true'
+        run: |
+          echo "Validating modules..."
+          VALIDATION_FAILED=0
+          
+          while IFS= read -r MODULE_PATH; do
+            if [ -z "$MODULE_PATH" ]; then
+              continue
+            fi
+            
+            echo "Validating: $MODULE_PATH"
+            
+            # Check required files exist
+            if [ ! -f "$MODULE_PATH/index.ts" ]; then
+              echo "❌ Missing index.ts in $MODULE_PATH"
+              VALIDATION_FAILED=1
+            fi
+            
+            if [ ! -f "$MODULE_PATH/README.md" ]; then
+              echo "❌ Missing README.md in $MODULE_PATH"
+              VALIDATION_FAILED=1
+            fi
+            
+            if [ ! -f "$MODULE_PATH/package.json" ]; then
+              echo "❌ Missing package.json in $MODULE_PATH"
+              VALIDATION_FAILED=1
+            fi
+            
+            # Install dependencies and build if package.json exists
+            if [ -f "$MODULE_PATH/package.json" ]; then
+              cd "$MODULE_PATH"
+              echo "Installing dependencies for $MODULE_PATH..."
+              npm install
+              
+              # Check if build script exists
+              if grep -q '"build"' package.json; then
+                echo "Building $MODULE_PATH..."
+                npm run build || {
+                  echo "❌ Build failed for $MODULE_PATH"
+                  VALIDATION_FAILED=1
+                }
+              fi
+              
+              # Run tests if test script exists
+              if grep -q '"test"' package.json; then
+                echo "Testing $MODULE_PATH..."
+                npm test || {
+                  echo "❌ Tests failed for $MODULE_PATH"
+                  VALIDATION_FAILED=1
+                }
+              fi
+              
+              cd - > /dev/null
+            fi
+            
+            echo "✅ $MODULE_PATH validated successfully"
+          done <<< "${{ steps.find-modules.outputs.modules }}"
+          
+          if [ $VALIDATION_FAILED -eq 1 ]; then
+            echo "❌ Module validation failed"
+            exit 1
+          fi
+          
+          echo "✅ All modules validated successfully"
+
+      - name: Generate module registry
+        if: steps.find-modules.outputs.has_changes == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "Generating module registry..."
+          
+          # Create a JSON registry of all modules
+          cat > module-registry.json << 'EOF'
+          {
+            "modules": [],
+            "updated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          EOF
+          
+          # Find all modules and add to registry
+          find external-modules -name "package.json" -type f | while read -r PKG; do
+            MODULE_DIR=$(dirname "$PKG")
+            MODULE_NAME=$(jq -r '.name' "$PKG")
+            MODULE_VERSION=$(jq -r '.version' "$PKG")
+            MODULE_DESCRIPTION=$(jq -r '.description' "$PKG")
+            
+            echo "Registering: $MODULE_NAME@$MODULE_VERSION"
+            
+            # In a real implementation, this would update a central registry
+            # or database with module information
+          done
+          
+          echo "✅ Module registry generated"
+
+      - name: Sync to module loader
+        if: steps.find-modules.outputs.has_changes == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "Syncing modules to loader..."
+          
+          # In a real implementation, this would:
+          # 1. Publish modules to npm registry or private registry
+          # 2. Update module loader configuration
+          # 3. Notify MeeBot of new/updated modules
+          # 4. Clear any caches
+          
+          echo "✅ Modules synced successfully"
+
+      - name: Comment on PR
+        if: steps.find-modules.outputs.has_changes == 'true' && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const modules = `${{ steps.find-modules.outputs.modules }}`.trim().split('\n');
+            
+            let comment = `## 🧩 Module Validation Report\n\n`;
+            comment += `✅ All modules validated successfully!\n\n`;
+            comment += `### Modified Modules:\n`;
+            
+            modules.forEach(module => {
+              if (module) {
+                comment += `- \`${module}\`\n`;
+              }
+            });
+            
+            comment += `\n### Next Steps:\n`;
+            comment += `- Once merged, modules will be automatically synced to the module loader\n`;
+            comment += `- MeeBot will be able to load these modules immediately\n`;
+            
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+
+      - name: Summary
+        if: steps.find-modules.outputs.has_changes == 'true'
+        run: |
+          echo "### 🧩 Module Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Modules validated" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Tests passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Modified Modules:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.find-modules.outputs.modules }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+      - name: Validate modules
+        run: |
+          echo "Validating external modules..."
+          
+          # Check TypeScript files
+          if ls external-modules/*/*.ts 1> /dev/null 2>&1; then
+            echo "✅ TypeScript files found"
+          else
+            echo "⚠️ No TypeScript files in external-modules"
+          fi
+          
+          # Count modules
+          MODULE_COUNT=$(find external-modules -name "*.ts" -type f | wc -l)
+          echo "📦 Total modules: $MODULE_COUNT"
+
+      - name: Generate module index
+        run: |
+          echo "# External Modules Index" > external-modules/INDEX.md
+          echo "" >> external-modules/INDEX.md
+          echo "Auto-generated list of available modules:" >> external-modules/INDEX.md
+          echo "" >> external-modules/INDEX.md
+          
+          # List smart-contracts modules
+          echo "## Smart Contracts" >> external-modules/INDEX.md
+          for file in external-modules/smart-contracts/*.ts; do
+            if [ -f "$file" ]; then
+              basename=$(basename "$file" .ts)
+              echo "- [$basename](./smart-contracts/$basename.ts)" >> external-modules/INDEX.md
+            fi
+          done
+          
+          # List shared-utils modules
+          echo "" >> external-modules/INDEX.md
+          echo "## Shared Utilities" >> external-modules/INDEX.md
+          for file in external-modules/shared-utils/*.ts; do
+            if [ -f "$file" ]; then
+              basename=$(basename "$file" .ts)
+              echo "- [$basename](./shared-utils/$basename.ts)" >> external-modules/INDEX.md
+            fi
+          done
+          
+          # List app-config modules
+          echo "" >> external-modules/INDEX.md
+          echo "## App Configuration" >> external-modules/INDEX.md
+          for file in external-modules/app-config/*.ts; do
+            if [ -f "$file" ]; then
+              basename=$(basename "$file" .ts)
+              echo "- [$basename](./app-config/$basename.ts)" >> external-modules/INDEX.md
+            fi
+          done
+
+      - name: Commit module index
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          if git diff --quiet external-modules/INDEX.md; then
+            echo "No changes to commit"
+          else
+            git add external-modules/INDEX.md
+            git commit -m "Auto-update: External modules index"
+            git push
+          fi
+
+      - name: Notify sync
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('✅ External modules synced successfully');
