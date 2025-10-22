@@ -1,0 +1,45 @@
+{
+  "id": "first-steps",
+  "title": "First Steps",
+  "description": "เริ่มต้นใช้งาน MeeChain และทำความรู้จักกับระบบ",
+  "difficulty": "beginner",
+  "estimatedTime": "15 minutes",
+  "category": "getting-started",
+  "rewards": {
+    "points": 100,
+    "mee": 10,
+    "badge": "first-quest"
+  },
+  "requirements": [
+    {
+      "id": "connect-wallet",
+      "type": "action",
+      "description": "เชื่อมต่อ wallet",
+      "completed": false
+    },
+    {
+      "id": "complete-profile",
+      "type": "action",
+      "description": "กรอกข้อมูลโปรไฟล์",
+      "completed": false
+    },
+    {
+      "id": "read-lesson",
+      "type": "lesson",
+      "lessonId": "01-getting-started",
+      "description": "อ่านบทเรียน Getting Started",
+      "completed": false
+    }
+  ],
+  "meebotMessages": {
+    "start": "ยินดีต้อนรับสู่ภารกิจแรกของคุณครับ! ผมจะคอยช่วยเหลือคุณตลอดทางครับ 💙",
+    "progress": "เก่งมากครับ! คุณทำไปได้แล้ว {progress}% เลยครับ! 💪",
+    "complete": "ยินดีด้วยครับ! คุณทำภารกิจแรกสำเร็จแล้ว! 🎉 คุณได้รับ 100 points และ 10 MEE tokens!",
+    "encouragement": "ไม่เป็นไรครับ ค่อยๆ ทำไปเรื่อยๆ ผมเชื่อในตัวคุณครับ! 💙"
+  },
+  "tips": [
+    "อ่านบทเรียนให้จบก่อนเริ่มทำ quest",
+    "ถ้าติดปัญหาให้ถาม MeeBot ได้เลยครับ",
+    "เชื่อมต่อ wallet บน Polygon network"
+  ]
+}
