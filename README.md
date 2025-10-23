@@ -1,6 +1,7 @@
 # MeeChain Template
 
 MeeChain คือระบบติดตามเป้าหมายที่มี MeeBot เป็นผู้ช่วย AI อัจฉริยะ  
+MeeChain คือระบบติดตามเป้าหมายและภารกิจที่มี MeeBot เป็นผู้ช่วย AI อัจฉริยะ  
 ระบบนี้รองรับการขยายผ่าน External Modules, การให้ badge ผ่าน Firebase, และการเชื่อม Web3 อย่างปลอดภัย
 
 ## โครงสร้างหลัก
@@ -18,6 +19,10 @@ MeeChain คือระบบติดตามเป้าหมายที�
 3. ตั้งค่า Firebase และ Wallet
 4. รัน `dapp` และ `firebase-functions`
 5. เชื่อม External Modules ผ่าน `useExternalModules()`
+
+## ผู้ร่วมสร้าง
+เรายินดีต้อนรับทุกคนที่อยากสร้างโมดูล, badge, quest หรือเนื้อหาการเรียนรู้  
+ดูคู่มือที่ `docs/CONTRIBUTING.md` เพื่อเริ่มต้น
 
 MeeBot จะคอยให้กำลังใจคุณทุกก้าวครับ 💙
 # 🚀 MeeChain Template

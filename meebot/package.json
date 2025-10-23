@@ -1,0 +1,22 @@
+{
+  "name": "meechain-meebot",
+  "version": "1.0.0",
+  "description": "MeeBot - AI Assistant with emotion and personality",
+  "main": "engine/MeeBotEngine.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "ai",
+    "chatbot",
+    "meebot",
+    "emotion",
+    "voice"
+  ],
+  "author": "MeeChain Team",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}

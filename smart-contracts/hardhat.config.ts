@@ -14,12 +14,16 @@ const config: HardhatUserConfig = {
   }
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import "@openzeppelin/hardhat-upgrades";
+import "hardhat-gas-reporter";
+import "solidity-coverage";
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
 const config: HardhatUserConfig = {
   solidity: {
+    version: "0.8.19",
     version: "0.8.20",
     settings: {
       optimizer: {
@@ -29,6 +33,8 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
+    hardhat: {
+      chainId: 1337,
     // Local development
     hardhat: {
       chainId: 31337,
@@ -36,6 +42,26 @@ const config: HardhatUserConfig = {
     localhost: {
       url: "http://127.0.0.1:8545",
     },
+    mumbai: {
+      url: process.env.MUMBAI_RPC_URL || "https://rpc-mumbai.maticvigil.com",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      chainId: 80001,
+    },
+    polygon: {
+      url: process.env.POLYGON_RPC_URL || "https://polygon-rpc.com",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      chainId: 137,
+    },
+  },
+  gasReporter: {
+    enabled: process.env.REPORT_GAS === "true",
+    currency: "USD",
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+  },
+  etherscan: {
+    apiKey: {
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY || "",
+      polygon: process.env.POLYGONSCAN_API_KEY || "",
     // Testnet - ตัวอย่าง Sepolia
     sepolia: {
       url: process.env.SEPOLIA_RPC_URL || "",

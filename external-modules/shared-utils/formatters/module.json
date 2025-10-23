@@ -1,0 +1,17 @@
+{
+  "name": "date-formatter",
+  "version": "1.0.0",
+  "description": "Date and time formatting utilities for MeeChain",
+  "author": "MeeChain Contributors",
+  "license": "MIT",
+  "type": "shared-util",
+  "exports": {
+    "functions": ["formatMeeDate", "formatMeeTime", "formatRelativeTime"]
+  },
+  "dependencies": {},
+  "permissions": {
+    "storage": "none",
+    "network": "none",
+    "contracts": []
+  }
+}
