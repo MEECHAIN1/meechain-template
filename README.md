@@ -1,5 +1,6 @@
 # MeeChain Template
 
+MeeChain คือระบบติดตามเป้าหมายที่มี MeeBot เป็นผู้ช่วย AI อัจฉริยะ  
 MeeChain คือระบบติดตามเป้าหมายและภารกิจที่มี MeeBot เป็นผู้ช่วย AI อัจฉริยะ  
 ระบบนี้รองรับการขยายผ่าน External Modules, การให้ badge ผ่าน Firebase, และการเชื่อม Web3 อย่างปลอดภัย
 
