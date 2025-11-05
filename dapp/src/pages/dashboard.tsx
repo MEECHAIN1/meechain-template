@@ -8,18 +8,17 @@ export default function Dashboard() {
       
       {/* Quick Actions */}
       <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-        <Link href="/token-dashboard">
-          <a style={{
-            padding: '1rem 1.5rem',
-            background: '#4f46e5',
-            color: 'white',
-            borderRadius: '8px',
-            textDecoration: 'none',
-            fontWeight: '600',
-            cursor: 'pointer',
-          }}>
-            💰 Token Dashboard
-          </a>
+        <Link href="/token-dashboard" style={{
+          padding: '1rem 1.5rem',
+          background: '#4f46e5',
+          color: 'white',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          fontWeight: '600',
+          cursor: 'pointer',
+          display: 'inline-block',
+        }}>
+          💰 Token Dashboard
         </Link>
       </div>
 

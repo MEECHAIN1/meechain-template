@@ -8,10 +8,22 @@ export default function TokenDashboard() {
   const usdEquivalent = (mockBalance * 0.05).toFixed(2)
 
   const mockTransactions = [
-    { date: '2025-11-04', type: 'Received', amount: '+50.00 MECH' },
-    { date: '2025-11-03', type: 'Sent', amount: '-25.50 MECH' },
-    { date: '2025-11-02', type: 'Swap', amount: '+100.00 MECH' },
+    { id: '1', date: '2025-11-04', type: 'Received', amount: '+50.00 MECH' },
+    { id: '2', date: '2025-11-03', type: 'Sent', amount: '-25.50 MECH' },
+    { id: '3', date: '2025-11-02', type: 'Swap', amount: '+100.00 MECH' },
   ]
+
+  const buttonStyle: React.CSSProperties = {
+    flex: 1,
+    padding: '1rem',
+    background: '#4f46e5',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '1rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+  }
 
   return (
     <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
@@ -43,52 +55,13 @@ export default function TokenDashboard() {
         gap: '1rem',
         marginBottom: '2rem',
       }}>
-        <button
-          aria-label="Send tokens"
-          style={{
-            flex: 1,
-            padding: '1rem',
-            background: '#4f46e5',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '1rem',
-            fontWeight: '600',
-            cursor: 'pointer',
-          }}
-        >
+        <button aria-label="Send tokens" style={buttonStyle}>
           Send
         </button>
-        <button
-          aria-label="Receive tokens"
-          style={{
-            flex: 1,
-            padding: '1rem',
-            background: '#4f46e5',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '1rem',
-            fontWeight: '600',
-            cursor: 'pointer',
-          }}
-        >
+        <button aria-label="Receive tokens" style={buttonStyle}>
           Receive
         </button>
-        <button
-          aria-label="Swap tokens"
-          style={{
-            flex: 1,
-            padding: '1rem',
-            background: '#4f46e5',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '1rem',
-            fontWeight: '600',
-            cursor: 'pointer',
-          }}
-        >
+        <button aria-label="Swap tokens" style={buttonStyle}>
           Swap
         </button>
       </div>
@@ -103,9 +76,9 @@ export default function TokenDashboard() {
           Recent Activity
         </h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {mockTransactions.map((tx, index) => (
+          {mockTransactions.map((tx) => (
             <div
-              key={index}
+              key={tx.id}
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
