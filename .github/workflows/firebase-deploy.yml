@@ -5,8 +5,9 @@ on:
       - main
     paths:
       - 'firebase-functions/**'
-  workflow_dispatch:
-
+  workflow_dispatch: 
+      - run
+      
 permissions:
   contents: read
   pull-requests: write
