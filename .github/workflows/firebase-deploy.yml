@@ -1,7 +1,7 @@
 name: Firebase Deploy
 on:
   push: yaml
-    branches: การผลิต
+    branches: production
       dispatch: npm install
       
 permissions:
