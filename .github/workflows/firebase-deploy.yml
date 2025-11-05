@@ -2,11 +2,9 @@ name: Firebase Deploy
 on:
   push:
     branches:
-      - main
-    paths:
-      - firebase-functions-Deploy
-  workflow_dispatch: 
-      - npm install
+         - main
+      dispatch:
+         - npm install
       
 permissions:
   contents: read
