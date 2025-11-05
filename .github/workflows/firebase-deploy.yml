@@ -1,7 +1,7 @@
 name: Firebase Deploy
 on:
   push: yaml
-    branches: mint
+    branches: การผลิต
       dispatch: npm install
       
 permissions:
