@@ -4,9 +4,9 @@ on:
     branches:
       - main
     paths:
-      - 'firebase-functions/**'
+      - firebase-functions-Deploy
   workflow_dispatch: 
-      - run install
+      - npm install
       
 permissions:
   contents: read
