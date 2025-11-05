@@ -6,7 +6,7 @@ on:
     paths:
       - 'firebase-functions/**'
   workflow_dispatch: 
-      - run
+      - run install
       
 permissions:
   contents: read
