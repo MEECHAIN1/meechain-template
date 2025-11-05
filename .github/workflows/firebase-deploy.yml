@@ -1,6 +1,4 @@
 name: Firebase Deploy
-name: Deploy Firebase Functions
-
 on:
   push:
     branches:
@@ -89,7 +87,6 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
         working-directory: ./firebase-functions
-        run: npm install
 
       - name: Build functions
         working-directory: ./firebase-functions
